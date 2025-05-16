@@ -1,5 +1,6 @@
 
 # Tarea Práctica: Lectura, Escritura y Captura de Video con OpenCV
+
 ---
 
 ## Contenido de la tarea
@@ -28,6 +29,11 @@ cv2.destroyAllWindows()
 
 ---
 
+**Captura de Pantalla**
+![Captura modo escala de grises](capturas_local/captura_1.png)
+
+---
+
 ## 2. Mostrar imagen con `cv2.imshow`
 
 Mostrar la imagen cargada hasta que se presiona cualquier tecla.
@@ -37,6 +43,11 @@ cv2.imshow('Mostrar Imagen', I)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
+
+---
+
+**Captura de Pantalla**
+![Captura modo escala de grises](capturas_local/captura_2.png)
 
 ---
 
@@ -81,6 +92,8 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
 ```
+
+---
 
 ## 5. Mejora interactiva: modo color/escala de grises/canales RGB, pausa y selección de canal
 
@@ -144,6 +157,21 @@ cv2.destroyAllWindows()
 ## Requisitos
 
 * Python 3.x instalado.
-* Biblioteca OpenCV instalada (`pip install opencv-python`).
+* Biblioteca OpenCV instalada (`pip install opencv-contrib-python`).
+* Biblioteca numpy instalada (`pip install numpy`).
 
 ---
+
+
+## Referencias
+
+* Ingenieria_del_conocimiento_UNCP_2025: [https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/](https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/)
+* CS231n: Deep Learning for Computer Vision: [https://cs231n.stanford.edu//](https://cs231n.stanford.edu//)
+
+---
+
+## 🧑‍💻 Autor
+
+Desarrollado por Jhulio Alessandro Morán de La Cruz.
+
+### Fecha: 15 de mayo de 2025
