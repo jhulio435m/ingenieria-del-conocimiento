@@ -1,59 +1,73 @@
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/opencv-4.7.0-blue)](https://opencv.org/)
+[![NumPy](https://img.shields.io/badge/numpy-1.24%2B-blue)](https://numpy.org/)
 
-# Tarea Práctica: Lectura, Escritura y Captura de Video con OpenCV
+# 🧠 Tarea Práctica: Lectura, Escritura y Captura de Video con OpenCV
+
+<!-- toc -->
+## 📌 Índice
+- [📘 Contenido de la Tarea](#📘-contenido-de-la-tarea)
+- [     1. 📷 Lectura y Visualización de Imagen](#1-lectura-y-visualización-de-imagen)
+- [     2. 🎞️ Mostrar Imagen con `cv2.imshow`](#2-mostrar-imagen-con-cv2imshow)
+- [     3. 📹 Captura de Video desde Cámara](#3-captura-de-video-desde-cámara)
+- [     4. 💾 Grabación de Video desde Cámara](#4-grabación-de-video-desde-cámara)
+- [     5. ⚙️ Mejora Interactiva](#5-mejora-interactiva)
+- [📦 Dependencias](#📦-dependencias)
+- [🗂️ Estructura de la tarea](#🗂️-estructura-del-proyecto)
+- [🔍 Referencias](#🔍-referencias)
+- [✍️ Autor y Fecha](#✍️-autor-y-fecha)
+<!-- tocstop -->
+
+## 📘 Contenido de la Tarea
+1. Lectura y visualización de imágenes.  
+2. Mostrar imagen usando `cv2.imshow`.  
+3. Captura de video desde cámara.  
+4. Grabación de video en archivo AVI.  
+5. Mejora interactiva: alternar color/escala de grises, pausar, salir y selección de canales RGB.
 
 ---
 
-## Contenido de la tarea
-
-1. Lectura y visualización de imágenes.
-2. Mostrar imagen usando `cv2.imshow`.
-3. Grabación de video capturado en archivo AVI.
-4. Mejora interactiva: alternar color/escala de grises, pausar, salir, y selección de canales (rojo, verde, azul).
-5. Espacio para capturas de pantalla de cada ejercicio.
-
----
-
-## 1. Lectura y visualización de imagen
-
-Se lee una imagen desde disco y se muestra su tamaño (dimensiones y canales).
-
+## 1. Lectura y Visualización de Imagen
 ```python
 import cv2
-
-I = cv2.imread('osin.jpeg')
-print("Tamaño de la imagen BGR: ", I.shape)
+I = cv2.imread('images/osin.jpeg')
+print("Tamaño de la imagen BGR:", I.shape)
 cv2.imshow('Imagen Original', I)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
+### Resultado
 
----
-
-**Captura de Pantalla**
-![Captura modo escala de grises](screenshots/captura_1.png)
-
----
-
-## 2. Mostrar imagen con `cv2.imshow`
-
-Mostrar la imagen cargada hasta que se presiona cualquier tecla.
-
-```python
-cv2.imshow('Mostrar Imagen', I)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+```bash
+Tamaño de la imagen BGR:  (183, 275, 3)
 ```
 
+**Captura de Pantalla**
+![Captura Lectura Imagen](screenshots/captura_1.png)
+
 ---
+
+## 2. Mostrar Imagen con `cv2.imshow`
+
+```python
+Igray = cv2.imread('images/osin.jpeg', cv2.IMREAD_GRAYSCALE)
+print("Tamaño de la imagen en gris: ", Igray.shape)
+cv2.imshow('image gray', Igray)
+cv2.waitKey(5000)
+cv2.destroyAllWindows()
+```
+### Resultado
+
+```bash
+Tamaño de la imagen en gris: (183, 275)
+```
 
 **Captura de Pantalla**
-![Captura modo escala de grises](screenshots/captura_2.png)
+![Captura Mostrar Imagen](screenshots/captura_2.png)
 
 ---
 
-## 3. Captura de video desde cámara
-
-Capturar frames desde la cámara y mostrar video en color hasta que se presiona `q` para salir.
+## 3. Captura de Video desde Cámara
 
 ```python
 cap = cv2.VideoCapture(0)
@@ -70,9 +84,7 @@ cv2.destroyAllWindows()
 
 ---
 
-## 4. Grabación de video desde cámara
-
-Guardar el video capturado en archivo `output.avi` usando codec XVID y 20 FPS.
+## 4. Grabación de Video desde Cámara
 
 ```python
 cap = cv2.VideoCapture(0)
@@ -95,14 +107,14 @@ cv2.destroyAllWindows()
 
 ---
 
-## 5. Mejora interactiva: modo color/escala de grises/canales RGB, pausa y selección de canal
+## 5. Mejora Interactiva
 
-Funciones para:
+**Teclas disponibles:**
 
-* `c`: alternar entre video en color y escala de grises.
-* `p`: pausar y reanudar la captura.
-* `q`: salir de la aplicación.
-* `r`, `g`, `b`: mostrar sólo el canal rojo, verde o azul respectivamente, o volver a color completo si se presiona dos veces la misma tecla.
+* `c`: alterna color ↔ gris
+* `p`: pausa/reanuda
+* `r`, `g`, `b`: muestra solo ese canal
+* `q`: salir
 
 ```python
 import cv2
@@ -111,7 +123,7 @@ import numpy as np
 cap = cv2.VideoCapture(0)
 modo_gris = False
 pausa = False
-canal_color = None  # 'r', 'g', 'b' o None para color completo
+canal = None
 
 while True:
     if not pausa:
@@ -120,33 +132,28 @@ while True:
             break
 
         if modo_gris:
-            frame_mostrar = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        elif canal_color is not None:
-            canales = {'b': 0, 'g': 1, 'r': 2}
-            canal_idx = canales[canal_color]
-            frame_mostrar = np.zeros_like(frame)
-            frame_mostrar[:, :, canal_idx] = frame[:, :, canal_idx]
+            disp = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        elif canal:
+            idx = {'b':0,'g':1,'r':2}[canal]
+            disp = np.zeros_like(frame)
+            disp[:,:,idx] = frame[:,:,idx]
         else:
-            frame_mostrar = frame
+            disp = frame
 
-        cv2.imshow('Captura Cámara - c: Color/Gris, p: Pausa, q: Salir, r/g/b: Canales', frame_mostrar)
+        cv2.imshow('Captura Interactiva', disp)
 
     key = cv2.waitKey(30) & 0xFF
     if key == ord('c'):
         modo_gris = not modo_gris
-        if modo_gris:
-            canal_color = None
+        canal = None
     elif key == ord('p'):
         pausa = not pausa
     elif key == ord('q'):
         break
-    elif key in [ord('r'), ord('g'), ord('b')]:
-        tecla = chr(key)
-        if canal_color == tecla:
-            canal_color = None
-        else:
-            canal_color = tecla
-            modo_gris = False
+    elif key in map(ord, ['r','g','b']):
+        letra = chr(key)
+        canal = None if canal == letra else letra
+        modo_gris = False
 
 cap.release()
 cv2.destroyAllWindows()
@@ -154,24 +161,40 @@ cv2.destroyAllWindows()
 
 ---
 
-## Requisitos
+## 📦 Dependencias
 
-* Python 3.x instalado.
-* Biblioteca OpenCV instalada (`pip install opencv-contrib-python`).
-* Biblioteca numpy instalada (`pip install numpy`).
-
----
-
-
-## Referencias
-
-* Ingenieria_del_conocimiento_UNCP_2025: [https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/](https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/)
-* CS231n: Deep Learning for Computer Vision: [https://cs231n.stanford.edu//](https://cs231n.stanford.edu//)
+* Python 3.x
+* OpenCV (`pip install opencv-contrib-python`)
+* NumPy (`pip install numpy`)
 
 ---
 
-## 🧑‍💻 Autor
+## 🗂️ Estructura de la tarea
 
-Desarrollado por Jhulio Alessandro Morán de La Cruz.
+```
+3-01-Lectura-Escritura-Camara/
+├── images/
+│   └── catgray.png
+│   └── edificio.jpg
+│   └── osin.jpeg
+├── screenshots/
+│   ├── captura_1.png
+│   └── captura_2.png
+├── 3-01-Lectura-Escritura-Camara.ipynb
+└── README.md
+```
 
-### Fecha: 15 de mayo de 2025
+---
+
+## 🔍 Referencias
+
+* Ingeniería del Conocimiento UNCP 2025: [https://github.com/Jaime1406/Ingenieria\_del\_conocimiento\_UNCP\_2025/](https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/)
+* CS231n: Deep Learning for Computer Vision: [https://cs231n.stanford.edu/](https://cs231n.stanford.edu/)
+
+---
+
+## ✍️ Autor y Fecha
+
+* 👤 **Jhulio Alessandro Morán de la Cruz**
+* 🧑‍💻 [@jhulio435m](https://github.com/jhulio435m)
+* 📅 **Fecha**: 15 de mayo de 2025

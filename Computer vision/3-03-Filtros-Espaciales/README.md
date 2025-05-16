@@ -1,54 +1,53 @@
-# Tarea de Procesamiento de Video en Vivo con OpenCV
+[![Python](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)  [![OpenCV](https://img.shields.io/badge/opencv-4.x-blue)](https://opencv.org/)  [![NumPy](https://img.shields.io/badge/numpy-1.24%2B-blue)](https://numpy.org/)  [![Matplotlib](https://img.shields.io/badge/matplotlib-3.x-orange)](https://matplotlib.org/)
 
-Esta tarea utiliza el notebook **`3-03-Filtros-Espaciales.ipynb`**, en el cual se captura y procesa video en tiempo real desde una cámara web usando OpenCV y NumPy.
+# 🧠 Tarea de Procesamiento de Video en Vivo con OpenCV
+
+<!-- toc -->
+## 📌 Índice
+- [📘 Contenido de la Tarea](#contenido-de-la-tarea)  
+- [1. 🎥 Captura de Video en Vivo](#1-captura-de-video-en-vivo)  
+- [2. ⚙️ Aplicación de Filtros en Tiempo Real](#2-aplicación-de-filtros-en-tiempo-real)  
+- [3. 🎮 Controles Interactivos](#3-controles-interactivos)  
+- [4. ⌨️ Mapeo de Teclas y Flechas](#4-mapeo-de-teclas-y-flechas)  
+- [📦 Dependencias](#dependencias)  
+- [🗂️ Estructura del Proyecto](#estructura-del-proyecto)  
+- [🔍 Referencias](#referencias)  
+- [✍️ Autor y Fecha](#autor-y-fecha)  
+<!-- tocstop -->
+
+## 📘 Contenido de la Tarea
+1. Captura de video en vivo  
+2. Aplicación de filtros en tiempo real  
+3. Controles interactivos (pause, salir)  
+4. Mapeo de teclas y flechas para cambiar parámetros  
 
 ---
 
-## 📋 Contenido
+## 1. 🎥 Captura de Video en Vivo
+```python
+import cv2
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    raise RuntimeError("No se pudo abrir la cámara")
 
-1. **Captura de video en vivo**
-2. **Aplicación de filtros en tiempo real**
-3. **Controles interactivos**
-4. **Mapeo de teclas y flechas**
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    cv2.imshow("Live Video", frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
----
-
-## ⚙️ Requisitos
-
-* Python 3.7+
-* OpenCV (`opencv--contrib-python`)
-* Matplotlib
-* NumPy
-
-Instalación:
-
-```bash
-pip install opencv-contrib-python numpy matplotlib
+cap.release()
+cv2.destroyAllWindows()
 ```
 
 ---
 
-## 🚀 Uso
-
-1. Abre **Jupyter Notebook** y carga `3-03-Filtros-Espaciales.ipynb`.
-2. Ejecuta la celda de **Captura en vivo**.
-3. Ajusta el tamaño de kernel con el **trackbar**.
-4. Cambia de filtro con las teclas indicadas.
-5. Modifica el umbral `t` con las flechas ↑/↓.
-
----
-
-## 🎥 Código de Captura en Vivo
+## 2. ⚙️ Aplicación de Filtros en Tiempo Real 
 
 ```python
-import cv2
-import numpy as np
-
-# Definición de filtros
-# Cada función recibe: frame, kernel k, umbral t
-# ... (implementaciones idénticas a las del notebook) ...
-
-# Mapeo de filtros a teclas
+# Definición previa de funciones: filter_original, filter_average, filter_gaussian, …
 filters = {
     '0': filter_original,
     '1': filter_average,
@@ -63,87 +62,83 @@ filters = {
     'a': filter_hough_circles,
 }
 
-# Inicializar cámara
-cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    raise RuntimeError("No se pudo abrir la cámara")
-
-# Crear ventana de control
+# Trackbar para kernel
 cv2.namedWindow("Control")
 cv2.createTrackbar("Kernel","Control",5,31, lambda v: None)
 
 active = '0'
 t = 100  # umbral inicial
+```
 
-while True:
-    ret, frame = cap.read()
-    if not ret: break
+Dentro del bucle principal, se lee `k = cv2.getTrackbarPos("Kernel","Control")`, se ajusta a impar, y se aplica:
 
-    # Leer kernel y asegurar impar
-    k = cv2.getTrackbarPos("Kernel","Control")
-    k = k if k%2==1 else k+1
-
-    # Aplicar filtro activo
-    out = filters[active](frame, k, t)
-    cv2.putText(out, f"Filtro {active} | k={k} | t={t}",
-                (10,30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
-
-    cv2.imshow("Processed", out)
-
-    key = cv2.waitKeyEx(1)
-    if key in (82, 2490368):  # flecha arriba
-        t = min(t+5, 1000)
-    elif key in (84, 2621440):  # flecha abajo
-        t = max(t-5, 0)
-    elif key == ord('q'):
-        break
-    else:
-        c = chr(key & 0xFF)
-        if c in filters:
-            active = c
-
-cap.release()
-cv2.destroyAllWindows()
+```python
+out = filters[active](frame, k, t)
+cv2.putText(out, f"Filtro {active} | k={k} | t={t}",
+            (10,30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
+cv2.imshow("Processed", out)
 ```
 
 ---
 
-## 🔍 Filtros Disponibles
+## 3. 🎮 Controles Interactivos
 
-| Tecla | Filtro           |
-| ----- | ---------------- |
-| 0     | Original         |
-| 1     | Promedio         |
-| 2     | Gaussiano        |
-| 3     | Mediana          |
-| 4     | Bilateral        |
-| 5     | Laplaciano       |
-| 6     | Sobel (magnitud) |
-| 7     | Canny            |
-| 8     | HoughLines       |
-| 9     | HoughLinesP      |
-| a     | HoughCircles     |
+* **q**: salir del programa
+* **Trackbar “Kernel”**: ajustar tamaño de ventana (de 1 a 31, solo impares)
+* **Teclas 0–9, a**: seleccionar filtro activo
 
 ---
 
-## Referencias
+## 4. ⌨️ Mapeo de Teclas y Flechas
 
-* Ingenieria_del_conocimiento_UNCP_2025: [https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/](https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/)
-* CS231n: Deep Learning for Computer Vision: [https://cs231n.stanford.edu//](https://cs231n.stanford.edu//)
+```python
+key = cv2.waitKeyEx(1)
+
+# Flechas ↑/↓ para umbral t
+if key in (82, 2490368):      # ↑
+    t = min(t + 5, 1000)
+elif key in (84, 2621440):    # ↓
+    t = max(t - 5, 0)
+elif key == ord('q'):
+    break
+else:
+    c = chr(key & 0xFF)
+    if c in filters:
+        active = c
+```
 
 ---
 
-## 🎮 Controles
+## 📦 Dependencias
 
-* **Flechas ←/→**: Ajustan el tamaño de ventana `k` (kernel) usado por los filtros de suavizado y Sobel; ← para disminuir y → para aumentar.
-* **Flechas ↑/↓**: Incrementan o decrementan el umbral `t`.
-* **Teclas 0–9, a**: Seleccionan el filtro activo.
-* **q**: Sale del programa.
+* Python 3.12
+* OpenCV (`pip install opencv-contrib-python`)
+* NumPy (`pip install numpy`)
+* Matplotlib (`pip install matplotlib`)
 
 ---
 
-© 2025 Jhulio Alessandro Morán de la Cruz
+## 🗂️ Estructura del Proyecto
 
-### Fecha: 16 de mayo de 2025
+```
+video-filtros-opencv/
+├── images/
+├── screenshots/
+├── 3-03-Filtros-Espaciales.ipynb
+└── README.md
+```
 
+---
 
+## 🔍 Referencias
+
+* Ingeniería del Conocimiento UNCP 2025: [https://github.com/Jaime1406/Ingenieria\_del\_conocimiento\_UNCP\_2025/](https://github.com/Jaime1406/Ingenieria_del_conocimiento_UNCP_2025/)
+* CS231n: Deep Learning for Computer Vision: [https://cs231n.stanford.edu/](https://cs231n.stanford.edu/)
+
+---
+
+## ✍️ Autor y Fecha
+
+* **Autor:** Jhulio Alessandro Morán de La Cruz
+* **Github:** [@jhulio435m](https://github.com/jhulio435m)
+* **Fecha**: 16 de mayo de 2025
