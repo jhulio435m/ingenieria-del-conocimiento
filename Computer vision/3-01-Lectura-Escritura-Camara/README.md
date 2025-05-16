@@ -30,7 +30,7 @@ cv2.destroyAllWindows()
 ---
 
 **Captura de Pantalla**
-![Captura modo escala de grises](capturas_local/captura_1.png)
+![Captura modo escala de grises](screenshots/captura_1.png)
 
 ---
 
@@ -47,7 +47,7 @@ cv2.destroyAllWindows()
 ---
 
 **Captura de Pantalla**
-![Captura modo escala de grises](capturas_local/captura_2.png)
+![Captura modo escala de grises](screenshots/captura_2.png)
 
 ---
 
