@@ -1,8 +1,5 @@
 
 # Tarea Práctica: Lectura, Escritura y Captura de Video con OpenCV
-
-Este documento contiene la descripción y los códigos para una tarea práctica de uso básico de OpenCV en Python, centrada en la manipulación de imágenes y video mediante cámara.
-
 ---
 
 ## Contenido de la tarea
@@ -85,7 +82,7 @@ out.release()
 cv2.destroyAllWindows()
 ```
 
-## 5. Mejora interactiva: modo color/escala de grises, pausa y selección de canal
+## 5. Mejora interactiva: modo color/escala de grises/canales RGB, pausa y selección de canal
 
 Funciones para:
 
